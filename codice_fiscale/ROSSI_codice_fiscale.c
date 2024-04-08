@@ -14,6 +14,7 @@ int codice_nome(void);
 bool controllaData(int giorno, int mese, int anno);
 void data_di_nascita(int day, int month, int year);
 int f_comune(void);
+void carattere_di_controllo(void);
 
 int main()
 {
@@ -22,7 +23,7 @@ int main()
         int scelta, res;
         do
         {
-            printf("(1) Da dati a codice fiscale \t (2) Da codice fiscale a dati\n\n\t\t(3)Esci dal programma\n\n");
+            printf("(1) Da dati a codice fiscale \t (2) Da codice fiscale a dati\n\n\t\t   (3)Esci dal programma\n\n");
             scanf("%d", &scelta);
 
             if (scelta != 1 && scelta != 2 && scelta != 3)
@@ -71,8 +72,9 @@ int main()
             scanf(" %c", &sesso);
 
             sesso = toupper(sesso);
-            
-            if(sesso != 'M' && sesso != 'F'){
+
+            if (sesso != 'M' && sesso != 'F')
+            {
                 printf("Sesso non valido\n");
                 continue;
             }
@@ -91,6 +93,10 @@ int main()
             {
                 continue;
             }
+
+            carattere_di_controllo();
+
+            printf("Codice fiscale: %s\n", codice_fiscale);
         }
 
         if (scelta == 2)
@@ -173,8 +179,6 @@ int codice_cognome(void)
         printf("Errore nel calcolo del codice fiscale (cognome).\n");
         return 1;
     }
-
-    printf("%s\n", codice_fiscale);
 }
 
 int codice_nome(void)
@@ -207,47 +211,44 @@ int codice_nome(void)
 
     if (c > 3)
     {
-        codice_fiscale[0] = cons[0];
-        codice_fiscale[1] = cons[2];
-        codice_fiscale[2] = cons[3];
+        codice_fiscale[3] = cons[0];
+        codice_fiscale[4] = cons[2];
+        codice_fiscale[5] = cons[3];
     }
     else if (c == 3)
     {
-        codice_fiscale[0] = cons[0];
-        codice_fiscale[1] = cons[1];
-        codice_fiscale[2] = cons[2];
+        codice_fiscale[3] = cons[0];
+        codice_fiscale[4] = cons[1];
+        codice_fiscale[5] = cons[2];
     }
     else if (c == 2)
     {
-        codice_fiscale[0] = cons[0];
-        codice_fiscale[1] = cons[1];
-        codice_fiscale[2] = voc[0];
+        codice_fiscale[3] = cons[0];
+        codice_fiscale[4] = cons[1];
+        codice_fiscale[5] = voc[0];
     }
     else if (c == 1 && v >= 2)
     {
-        codice_fiscale[0] = cons[0];
-        codice_fiscale[1] = voc[0];
-        codice_fiscale[2] = voc[1];
+        codice_fiscale[3] = cons[0];
+        codice_fiscale[4] = voc[0];
+        codice_fiscale[5] = voc[1];
     }
     else if (c == 1 && v == 1)
     {
-        codice_fiscale[0] = cons[0];
-        codice_fiscale[1] = voc[0];
-        codice_fiscale[2] = 'X';
+        codice_fiscale[3] = cons[0];
+        codice_fiscale[4] = voc[0];
+        codice_fiscale[5] = 'X';
     }
     else if (c == 0 && v == 2)
     {
-        codice_fiscale[0] = voc[0];
-        codice_fiscale[1] = voc[1];
-        codice_fiscale[2] = 'X';
+        codice_fiscale[3] = voc[0];
+        codice_fiscale[4] = voc[1];
+        codice_fiscale[5] = 'X';
     }
     else
     {
-        printf("Errore nel calcolo del codice fiscale (Nome).\n");
         return 1;
     }
-
-    printf("%s\n", codice_fiscale);
 }
 
 bool controllaData(int giorno, int mese, int anno)
@@ -341,87 +342,101 @@ bool controllaData(int giorno, int mese, int anno)
     return true;
 }
 
-void data_di_nascita(int day, int month, int year) {
-    char giorno[3], mese, anno[3]; 
+void data_di_nascita(int day, int month, int year)
+{
+    char giorno[3], mese, anno[3];
     int cifra1, cifra2;
 
-    if (sesso == 'F') {
+    if (sesso == 'F')
+    {
         cifra1 = (day + 40) / 10;
         cifra2 = (day + 40) % 10;
 
         giorno[0] = '0' + cifra1;
         giorno[1] = '0' + cifra2;
-        giorno[2] = '\0'; 
-    } else {
-        if (day < 10) {
+        giorno[2] = '\0';
+    }
+    else
+    {
+        if (day < 10)
+        {
             giorno[0] = '0';
             giorno[1] = '0' + day;
-            giorno[2] = '\0'; 
-        } else {
+            giorno[2] = '\0';
+        }
+        else
+        {
             cifra1 = day / 10;
             cifra2 = day % 10;
 
             giorno[0] = '0' + cifra1;
             giorno[1] = '0' + cifra2;
-            giorno[2] = '\0'; 
+            giorno[2] = '\0';
         }
     }
 
-    switch (month) {
-        case 1:
-            mese = 'A';
-            break;
-        case 2:
-            mese = 'B';
-            break;
-        case 3:
-            mese = 'C';
-            break;
-        case 4:
-            mese = 'D';
-            break;
-        case 5:
-            mese = 'E';
-            break;
-        case 6:
-            mese = 'H';
-            break;
-        case 7:
-            mese = 'L';
-            break;
-        case 8:
-            mese = 'M';
-            break;
-        case 9:
-            mese = 'P';
-            break;
-        case 10:
-            mese = 'R';
-            break;
-        case 11:
-            mese = 'S';
-            break;
-        case 12:
-            mese = 'T';
-            break;
-        default:
-            break;
+    switch (month)
+    {
+    case 1:
+        mese = 'A';
+        break;
+    case 2:
+        mese = 'B';
+        break;
+    case 3:
+        mese = 'C';
+        break;
+    case 4:
+        mese = 'D';
+        break;
+    case 5:
+        mese = 'E';
+        break;
+    case 6:
+        mese = 'H';
+        break;
+    case 7:
+        mese = 'L';
+        break;
+    case 8:
+        mese = 'M';
+        break;
+    case 9:
+        mese = 'P';
+        break;
+    case 10:
+        mese = 'R';
+        break;
+    case 11:
+        mese = 'S';
+        break;
+    case 12:
+        mese = 'T';
+        break;
+    default:
+        break;
     }
 
-    
-    if (year >= 2000) {
+    if (year >= 2000)
+    {
         cifra1 = (year - 2000) / 10;
         cifra2 = (year - 2000) % 10;
-    } else {
-        cifra1 = year / 100; 
-        cifra2 = year % 100; 
+    }
+    else
+    {
+        cifra1 = year / 100;
+        cifra2 = year % 100;
     }
 
     anno[0] = '0' + cifra1;
     anno[1] = '0' + cifra2;
-    anno[2] = '\0'; 
+    anno[2] = '\0';
 
-    printf("%s %c %s\n", giorno, mese, anno);
+    codice_fiscale[6] = anno[0];
+    codice_fiscale[7] = anno[1];
+    codice_fiscale[8] = mese;
+    codice_fiscale[9] = giorno[0];
+    codice_fiscale[10] = giorno[1];
 }
 
 int f_comune(void)
@@ -455,9 +470,8 @@ int f_comune(void)
     }
 
     provincia[strlen(provincia)] = '\0';
-    printf("%s\n%s\n\n", comune, provincia);
 
-    fp = fopen(".//codice_fiscale//comuni.txt", "r");
+    fp = fopen("comuni.txt", "r");
 
     if (fp == NULL)
     {
@@ -469,17 +483,68 @@ int f_comune(void)
     {
         if (strcmp(com, comune) == 0 && strcmp(pro, provincia) == 0)
         {
-            printf("\n%s\n", cod_catastale);
             count = 1;
             break;
         }
     }
+
     if (count == 0)
     {
         printf("Comune non trovato\n");
         return 1;
     }
 
+    codice_fiscale[11] = cod_catastale[0];
+    codice_fiscale[12] = cod_catastale[1];
+    codice_fiscale[13] = cod_catastale[2];
+    codice_fiscale[14] = cod_catastale[3];
+
     fclose(fp);
     return 0;
 }
+
+void carattere_di_controllo(void)
+{
+    const int tableC[26] = {1, 0, 5, 7, 9, 13, 15, 17, 19, 21, 2, 4, 18, 20, 11, 3, 6, 8, 12, 14, 16, 10, 22, 25, 24, 23};
+    const char tableE[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+
+    int sum = 0;
+
+    for (int i = 0; i < CODE - 1; i++)
+    {
+        char c = codice_fiscale[i];
+        int index;
+
+        if (i % 2 == 0)
+        {
+            if (c >= '0' && c <= '9')
+            {
+                index = c - '0';
+            }
+            else if (c >= 'A' && c <= 'Z')
+            {
+                index = c - 'A';
+            }
+
+            sum += tableC[index];
+        }
+        else
+        {
+            if (c >= '0' && c <= '9')
+            {
+                index = c - '0';
+            }
+            else if (c >= 'A' && c <= 'Z')
+            {
+                index = c - 'A';
+            }
+            
+            sum += index;
+        }
+    }
+
+    char checkDigit = tableE[sum % 26];
+
+    codice_fiscale[CODE - 1] = checkDigit;
+}
+
