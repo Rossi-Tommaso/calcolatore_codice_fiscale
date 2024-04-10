@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 #define LEN 30
-#define CODE 17
+#define CODE 16
 #define DATE 11
 
 char comune[LEN], cognome[LEN], nome[LEN], data[DATE], sesso, provincia[LEN], codice_fiscale[CODE];
@@ -15,6 +15,7 @@ bool controllaData(int giorno, int mese, int anno);
 void data_di_nascita(int day, int month, int year);
 int f_comune(void);
 void carattere_di_controllo(void);
+bool codice_inverso(void);
 
 int main()
 {
@@ -98,26 +99,32 @@ int main()
 
             printf("Codice fiscale: %s\n", codice_fiscale);
         }
-
         if (scelta == 2)
         {
-            int i = 0;
+            int res;
 
             do
             {
                 printf("Inserisci codice fiscale: ");
                 scanf("%s", codice_fiscale);
 
-                codice_fiscale[i] = toupper(codice_fiscale[i]);
-            } while (strlen(codice_fiscale) != 16);
-             
-            printf("%s", codice_fiscale);
+                for (int i = 0; i < strlen(codice_fiscale); i++)
+                {
+                    codice_fiscale[i] = toupper(codice_fiscale[i]);
+                }
+
+                printf("%ld\n", strlen(codice_fiscale));
+            } while (strlen(codice_fiscale) < 16 && strlen(codice_fiscale) > 16);
+
+            if (!codice_inverso())
+            {
+                continue;
+            }
         }
 
         if (scelta == 3)
-            break;
+            return 0;
     }
-    return 0;
 }
 
 int codice_cognome(void)
@@ -486,6 +493,9 @@ int f_comune(void)
 
     if (fp == NULL)
     {
+        fp = fopen(".//codice_fiscale//comuni.txt", "r");
+    }
+    if(fp == NULL){
         printf("Errore nell'apertura del file\n");
         return -1;
     }
@@ -549,7 +559,7 @@ void carattere_di_controllo(void)
             {
                 index = c - 'A';
             }
-            
+
             sum += index;
         }
     }
@@ -559,3 +569,136 @@ void carattere_di_controllo(void)
     codice_fiscale[CODE - 1] = checkDigit;
 }
 
+bool data_inversa(void)
+{
+    char giorno[3] = {codice_fiscale[9], codice_fiscale[10], '\0'};
+    char mese[3];
+    char anno[3] = {codice_fiscale[6], codice_fiscale[7], '\0'};
+
+    switch (codice_fiscale[8])
+    {
+    case 'A':
+        strcpy(mese, "01");
+        break;
+    case 'B':
+        strcpy(mese, "02");
+        break;
+    case 'C':
+        strcpy(mese, "03");
+        break;
+    case 'D':
+        strcpy(mese, "04");
+        break;
+    case 'E':
+        strcpy(mese, "05");
+        break;
+    case 'H':
+        strcpy(mese, "06");
+        break;
+    case 'L':
+        strcpy(mese, "07");
+        break;
+    case 'M':
+        strcpy(mese, "08");
+        break;
+    case 'P':
+        strcpy(mese, "09");
+        break;
+    case 'R':
+        strcpy(mese, "10");
+        break;
+    case 'S':
+        strcpy(mese, "11");
+        break;
+    case 'T':
+        strcpy(mese, "12");
+        break;
+    default:
+        printf("Errore: mese non valido\n");
+        return false;
+    }
+
+    printf("%s/%s/%s\n", giorno, mese, anno);
+
+    return true;
+}
+
+bool comune_inverso(void){
+    FILE *fp;
+    char cod_catastale[LEN], com[LEN], pro[LEN];
+    char cc[5] = {codice_fiscale[11], codice_fiscale[12], codice_fiscale[13], codice_fiscale[14], '\0'};
+    int count = 0;
+
+    fp = fopen("comuni.txt", "r");
+
+    if (fp == NULL)
+    {
+        fp = fopen(".//codice_fiscale//comuni.txt", "r");
+    }
+    if(fp == NULL){
+        printf("Errore nell'apertura del file\n");
+        return false;
+    }
+
+    while (fscanf(fp, "%s %s %s", cod_catastale, com, pro) != EOF)
+    {
+        if (strcmp(cc, cod_catastale) == 0){
+            count = 1;
+            break;
+        }
+    }
+
+    if (count == 0)
+    {
+        printf("Comune non trovato\n");
+        return false;
+    }
+
+    for(int i = 0; i < LEN; i++){
+        if(com[i] == '_')
+            com[i] = ' ';
+    }
+
+    printf("Comune: %s\nProvincia: %s\n", com, pro);
+
+    fclose(fp);
+    return true;
+}
+
+bool codice_inverso(void)
+{
+    char nome[4], cognome[4];
+
+    for (int i = 0; i < 6; i++)
+    {
+        if (sizeof(codice_fiscale[i]) == sizeof(char))
+        {
+            if (i < 3)
+                cognome[i] = codice_fiscale[i];
+
+            else
+            {
+                nome[i - 3] = codice_fiscale[i];
+            }
+        }
+        else
+        {
+            printf("Errore: I primi sei caratteri del codice fiscale devono essere lettere\n");
+            return false;
+        }
+    }
+    nome[3] = '\0';
+    cognome[3] = '\0';
+
+    printf("Nome: %s\n", nome);
+    printf("Cognome: %s\n", cognome);
+
+    if (!data_inversa())
+        return false;
+
+    if(!comune_inverso()){
+        return false;
+    }
+
+    return true;
+}
