@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 #define LEN 30
-#define CODE 16
+#define CODE 17
 #define DATE 11
 
 char comune[LEN], cognome[LEN], nome[LEN], data[DATE], sesso, provincia[LEN], codice_fiscale[CODE];
@@ -101,6 +101,17 @@ int main()
 
         if (scelta == 2)
         {
+            int i = 0;
+
+            do
+            {
+                printf("Inserisci codice fiscale: ");
+                scanf("%s", codice_fiscale);
+
+                codice_fiscale[i] = toupper(codice_fiscale[i]);
+            } while (strlen(codice_fiscale) != 16);
+             
+            printf("%s", codice_fiscale);
         }
 
         if (scelta == 3)
